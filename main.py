@@ -3,6 +3,8 @@ from tkinter import *
 board_width = 750
 board_height = 750
 r = 50
+
+#create the grid of circles
 def createGrid():
     img = PhotoImage(file="redDot.gif")
     for i in range(8):
