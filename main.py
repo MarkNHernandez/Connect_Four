@@ -19,6 +19,18 @@ board = Canvas(width=board_width, height=board_height, bg='blue')
 board.pack()
 board.place(x=135, y=61)
 
+##DON'T JUDGE THIS, IT'S A WORK IN PROGRESS
+
+# def checkWinner(index):
+#     #back and to the left
+#     conditions = [[0, -7, -14, -21], [0, -1, -2, -3], [0, 5, 10, 15], [0, 6, 12, 18], [0, 7, 14, 21], [0, 1, 2, 3], [0, -5, -10, -15], [0, -6, -12, -18]]
+#     for i in range(len(conditions)):
+#         for j in range(len(conditions[i])):
+#             if any(board.itemcget(index+j, "fill") == 'red'):
+#                 print('winner')
+#     color = board.itemcget(index, "fill")
+#     print(color)
+
 def turnSelect():
     global turn
     if turn == True:
@@ -59,41 +71,49 @@ def changeColor(c):
     global col
     global button
     if c == 0:
-        board.itemconfig((c*6)+col[0], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[0] -=1
-        print(col[0])
+        #checkWinner(((c*6)+col[c])+1)
+        print(((c*6)+col[c]))
     elif c == 1:
-        board.itemconfig((c*6)+col[1], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[1] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[1])
     elif c == 2:
-        board.itemconfig((c*6)+col[2], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[2] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[2])
     elif c == 3:
-        board.itemconfig((c*6)+col[3], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[3] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[3])
     elif c == 4:
-        board.itemconfig((c*6)+col[4], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[4] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[4])
     elif c == 5:
-        board.itemconfig((c*6)+col[5], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[5] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[5])
     elif c == 6:
-        board.itemconfig((c*6)+col[6], fill=turnSelect())
+        board.itemconfig((c*6)+col[c], fill=turnSelect())
         col[6] -=1
+        #checkWinner(((c*6)+col[c])+1)
         print(col[6])
     if any(t == 0 for t in col):
         col[c] = 6
         button[c]['state'] = 'disabled'
 
 
+
 createGrid()
 createButtons()
 reset = Button(root, command=resetGrid, image=img, width=60)
 reset.pack()
-reset.place(x=250, y=700)
+reset.place(x=370, y=700)
 root.mainloop()
