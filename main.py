@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import messagebox as mb
 import numpy as np
 
 #canvas settings
@@ -31,15 +32,25 @@ def changeButtons():
         for i in range(len(button)):
             button[i]['image'] = imgR
     
-# def checkWinner(index):
-#     global turn
-#     buffer =[]
-#     conditions = np.array([[0, -7, -14, -21], [0, -1, -2, -3], [0, 5, 10, 15], [0, 6, 12, 18], [0, 7, 14, 21], [0, 1, 2, 3], [0, -5, -10, -15], [0, -6, -12, -18]])
-#     buffer = conditions + index
-#     for i in range(len(buffer)):
-#         for j in range(len(buffer[i])):
-#             if all(board.itemcget(buffer[i][j], "fill") == 'red'):
-#                 print('winner')
+def checkWinner(index):
+    global turn
+    buffer =[]
+    conditions = np.array([[0, -7, -14, -21], [0, -1, -2, -3], [0, 5, 10, 15], [0, 6, 12, 18], [0, 7, 14, 21], [0, 1, 2, 3], [0, -5, -10, -15], [0, -6, -12, -18]])
+    buffer = conditions + index
+    root.update()
+    for i in range(len(buffer)):
+            if board.itemcget(buffer[i][0], "fill") == 'red' and board.itemcget(buffer[i][1], "fill") == 'red' and board.itemcget(buffer[i][2], "fill") == 'red' and board.itemcget(buffer[i][3], "fill") == 'red':
+                print('winner!')
+                for i in range(7):
+                    button[i]['state'] = 'disabled'
+                if mb.askyesno('Winner!', 'You Won! Play Again?'):
+                    resetGrid()
+            elif board.itemcget(buffer[i][0], "fill") == 'yellow' and board.itemcget(buffer[i][1], "fill") == 'yellow' and board.itemcget(buffer[i][2], "fill") == 'yellow' and board.itemcget(buffer[i][3], "fill") == 'yellow':
+                print('winner!')
+                for i in range(7):
+                    button[i]['state'] = 'disabled'
+                if mb.askyesno('Winner!', 'You Won! Play Again?'):
+                    resetGrid()
 
 def turnSelect():
     global turn
@@ -68,7 +79,6 @@ def resetGrid():
         col = [6,6,6,6,6,6,6]
         turn = True
 
-
 #create the array of buttons and place on the canvas
 def createButtons():
     for i in range(7):
@@ -81,39 +91,43 @@ def changeColor(c):
     #place the coin
     global col
     global button
+    index = (c*6)+col[c]
     changeButtons()
+
     if c == 0:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[0] -=1
-        print(((c*6)+col[c]))
+        print(col[0])
     elif c == 1:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[1] -=1
         print(col[1])
     elif c == 2:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[2] -=1
         print(col[2])
     elif c == 3:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[3] -=1
         print(col[3])
     elif c == 4:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[4] -=1
         print(col[4])
     elif c == 5:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[5] -=1
         print(col[5])
     elif c == 6:
-        board.itemconfig((c*6)+col[c], fill=turnSelect())
+        board.itemconfig(index, fill=turnSelect())
         col[6] -=1
         print(col[6])
+
     if any(t == 0 for t in col):
         col[c] = 6
         button[c]['state'] = 'disabled'
-
+    
+    checkWinner(index)
 
 
 createGrid()
