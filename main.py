@@ -95,7 +95,7 @@ def checkWinner(index):
     root.update()
     for i in range(len(buffer)):
             # Python trick - I think this can be simplified to:
-            # if all(board.itemcget(buffer[0][n], "fill") == "red" for n in range(4)):
+            # if all(board.itemcget(buffer[i][n], "fill") == "red" for n in range(4)):
             if board.itemcget(buffer[i][0], "fill") == 'red' and board.itemcget(buffer[i][1], "fill") == 'red' and board.itemcget(buffer[i][2], "fill") == 'red' and board.itemcget(buffer[i][3], "fill") == 'red':
                 print('winner!')
                 for i in range(7):
@@ -139,6 +139,7 @@ def resetGrid():
         ass['state'] = 'normal'
         ass['image'] = imgR
 
+    This works for all all iterables in Python in some way or another (lists, sets, dicts, etc.)
     """
     for i in range(len(button)):
         button[i]['state'] = 'normal'
