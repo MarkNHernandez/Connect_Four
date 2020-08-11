@@ -36,6 +36,7 @@ def change_buttons():
 def check_winner(index):
     global turn
     buffer =[]
+    #the conditions list is a list of all the possible winning conditions in all directions with respect to the index of the coin
     conditions = np.array([[0, -7, -14, -21], [0, -1, -2, -3], [0, 5, 10, 15], [0, 6, 12, 18], [0, 7, 14, 21], [0, 1, 2, 3], [0, -5, -10, -15], [0, -6, -12, -18]])
     buffer = conditions + index
     root.update()
