@@ -1,58 +1,78 @@
 from tkinter import *
 from tkinter import messagebox as mb
-import numpy as np
+from enum import Enum
+
+
+#region Classes
+
+class State(Enum):
+    empty = 0
+    player_one = 1
+    player_two = 2
+
+class Game():
+    def __init__(self):
+        self.turn = State.player_one
+        self.winner = False
+
+class Color(str, Enum):
+    BLACK = "black"
+    RED = "red"
+    YELLOW = "yellow"
+
+class Dot:
+    def __init__(self, row, column, diameter, radius):
+        self.row = row
+        self.column = column
+        self.fill = Color.BLACK
+        self.state = State.empty
+        board.create_oval(diameter*(row), 
+                          diameter*(column), 
+                          (diameter*(row)-radius), 
+                          (diameter*(column)-radius), 
+                          fill = Color.BLACK)
+    def reset(self):
+        fill = Color.BLACK
+        state = State.empty
+
+class Game_Button:
+    def __init__(self, column):
+       self.column = column
+       Button(root, 
+              command = change_color(), 
+              image=image_red_dot, 
+              width=60) 
+    
+
+#endregion
+
+
+#region Properties
+
+screen_width = 800
+screen_height = 800
+board_width = 530
+board_height = 600
+dot_diameter = 75
+dot_radius = 65
+buttons = []
+dots = []
+col = [6,6,6,6,6,6,6]
+turn = True
+
+#endregion
 
 #canvas settings
 root = Tk()
 root.geometry("800x800")
-
-#variables
-board_width = 530
-board_height = 600
-diameter = 75
-radius = 65
-imgR = PhotoImage(file="redDot.gif")
-imgY = PhotoImage(file="yellowDot.gif")
-imgRe = PhotoImage(file="reset.gif")
-button = []
-col = [6,6,6,6,6,6,6]
-#turn True: red; turn False: yellow
-turn = True
-
+image_red_dot = PhotoImage(file="redDot.gif")
+image_yellow_dot = PhotoImage(file="yellowDot.gif")
+image_reset = PhotoImage(file="reset.gif")
 #create the board
 board = Canvas(width=board_width, height=board_height, bg='blue')
 board.pack()
 board.place(x=135, y=61)
-
-def change_buttons():
-    global turn
-    if turn:
-        for i in range(len(button)):
-            button[i]['image'] = imgY
-    else:
-        for i in range(len(button)):
-            button[i]['image'] = imgR
-    
-def check_winner(index):
-    global turn
-    buffer =[]
-    #the conditions list is a list of all the possible winning conditions in all directions with respect to the index of the coin
-    conditions = np.array([[0, -7, -14, -21], [0, -1, -2, -3], [0, 5, 10, 15], [0, 6, 12, 18], [0, 7, 14, 21], [0, 1, 2, 3], [0, -5, -10, -15], [0, -6, -12, -18]])
-    buffer = conditions + index
-    root.update()
-    for i in range(len(buffer)):
-            if all(board.itemcget(buffer[i][n], "fill") == "red" for n in range(4)):
-                print('winner!')
-                for i in range(7):
-                    button[i]['state'] = 'disabled'
-                if mb.askyesno('Winner!', 'You Won! Play Again?'):
-                    reset_grid()
-            elif all(board.itemcget(buffer[i][n], "fill") == "yellow" for n in range(4)):
-                for i in range(7):
-                    button[i]['state'] = 'disabled'
-                if mb.askyesno('Winner!', 'You Won! Play Again?'):
-                    reset_grid()
-
+ 
 def turn_select():
     global turn
     if turn == True:
@@ -64,28 +84,20 @@ def turn_select():
 
 #create the grid of circles
 def create_grid():
-    for i in range(7):
-        for j in range(6):
-            board.create_oval(diameter*(i+1), diameter*(j+1), (diameter*(i+1)-radius), (diameter*(j+1)-radius), fill='black')
+    for i in range(1,7):
+        for j in range(1,8):
+            dots.append(Dot(j, i, dot_diameter, dot_radius))
 
 def reset_grid():
-    global col
-    global turn
-    global button
-    for index in button:
-        index['state'] = 'normal'
-        index['image'] = imgR
-    for i in range(1,43,1):
-        board.itemconfig(i, fill='black')
-        col = [6,6,6,6,6,6,6]
-        turn = True
+    for dot in dots:
+        dot.reset()
 
 #create the array of buttons and place on the canvas
 def create_buttons():
     for i in range(7):
-        button.append(Button(root, command=lambda c=i: change_color(c), image=imgR, width=60))
-        button[i].pack()
-        button[i].place(x=(145+(diameter*i)), y=0)
+        buttons.append()
+        buttons[i].pack()
+        buttons[i].place(x=(145+(dot_diameter*i)), y=0)
 
 #change the color of the dot
 def change_color(c):
@@ -101,17 +113,18 @@ def change_color(c):
 
     if any(t == 0 for t in col):
         col[c] = 6
-        button[c]['state'] = 'disabled'
+        buttons[c]['state'] = 'disabled'
     
     check_winner(index)
 
 def main():
     create_grid()
     create_buttons()
-    reset = Button(root, command=reset_grid, image=imgRe, width=240)
+    reset = Button(root, command=reset_grid, image=image_reset, width=240)
     reset.pack()
     reset.place(x=270, y=700)
     root.mainloop()
 
 if __name__ == "__main__":
     main()
+     
