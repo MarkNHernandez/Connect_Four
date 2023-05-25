@@ -37,13 +37,26 @@ class Color(str, Enum):
     YELLOW = "yellow"
 
 class GameButton(object):
-    def __init__(self, column, image, width):
-        self.image = image_red_dot
-        self.button = Button(root, command = self.change_color, image = image, width = width)
-        self.button.grid(row = 0, column=column, padx = 5)
-
+    def __init__(self, game, column, image, width):
+        self.image = image
+        self.game = game
+        self.state = State.player_one
+        self.column = column
+        self.tk = Button(root, command = self.change_color, image = self.image, width = width)
+        self.tk.grid(row = 0, column=column, padx = 5)
+    
     def change_color(self):
-        pass
+        if (self.state == State.player_one):
+            for button in self.game.buttons:
+                button.tk.configure(image=image_yellow_dot)
+            self.game.dots[3].itemconfig(fill="red")
+            self.state = State.player_two
+        elif(self.state == State.player_two):
+            for button in self.game.buttons:
+                button.tk.configure(image=image_red_dot)
+            self.state = State.player_one
+        else:
+            print("Error in turns")
 
 class Dot:
     def __init__(self, board, row, column, diameter, radius):
@@ -56,6 +69,8 @@ class Dot:
                                       (diameter*(row)-radius),
                                       (diameter*(column)-radius),
                                       fill = self.fill)
+    def change_color(self):
+        self.oval.configure(fill="red")
     def reset(self):
         self.oval.fill = Color.BLACK
         self.state = State.empty
@@ -73,7 +88,7 @@ class Board(object):
 
         self.buttons = []
         for i in range(number_of_columns):
-            self.buttons.append(GameButton(i, image_red_dot, 60, self.dots))
+            self.buttons.append(GameButton(self, i,  image_red_dot, 60))
 
         
 #endregion
